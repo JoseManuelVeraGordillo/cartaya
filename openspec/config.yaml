@@ -1,32 +1,45 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Se inyecta en TODAS las generaciones de artefactos. Conciso a propósito.
+context: |
+  CartaYa: carta digital con pedidos para una cafetería de barrio española
+  (La Estación). Cliente: Andrés, el dueño, sin perfil técnico.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Stack técnico (fijado; no se renegocia en propuestas):
+  - Backend: Node.js 22 con Express y better-sqlite3 (base de datos SQLite
+    en un único fichero, suficiente para una cafetería).
+  - Frontend: React 19 con Vite, servido como estáticos por el propio
+    Express. CSS propio, sin frameworks CSS pesados.
+  - Tiempo real: Server-Sent Events (no polling, no WebSockets).
+  - Tests: suite automatizada; cada escenario de las specs debe tener un
+    test trazable por el nombre del escenario.
+  - Autenticación: sesión simple con contraseña de establecimiento (no hay
+    multiusuario). Sin Docker en desarrollo.
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  Principios innegociables:
+  1. Idioma y mercado: todo el producto (interfaz, textos, specs, commits,
+     documentación) en español de España. Precios en euros con IVA incluido.
+  2. Simplicidad ante todo: es una aplicación para una cafetería de barrio,
+     no una plataforma. Ante dos soluciones, siempre la más simple.
+  3. Privacidad por diseño: el cliente final NUNCA se registra ni aporta
+     datos personales. Un pedido se asocia a una mesa, jamás a una persona.
+  4. La spec es la fuente de verdad: todo cambio de comportamiento
+     observable del sistema debe entrar como cambio de OpenSpec (propuesta
+     + deltas) o regularizarse como tal. Un comportamiento que
+     openspec/specs/ no describe es un defecto, aunque el código funcione.
+  5. Accesibilidad real: la carta la usan personas mayores en un móvil a
+     contraluz: tipografía legible, contraste alto, botones grandes. Los
+     alérgenos se muestran siempre de forma visible (obligación legal).
+
+# Reglas por artefacto: solo se inyectan al generar ese artefacto.
+rules:
+  specs:
+    - Redacta en español conservando la palabra normativa inglesa de cada
+      requisito (MUST/SHALL), p. ej. "El sistema MUST mostrar todos los
+      platos activos"
+    - Reutiliza los términos ya definidos en las specs vivas; no introduzcas
+      sinónimos nuevos para conceptos existentes
+  proposal:
+    - Registra cada decisión de negocio en proposal.md con su fecha
+  design:
+    - Ninguna dependencia nueva sin justificación escrita
