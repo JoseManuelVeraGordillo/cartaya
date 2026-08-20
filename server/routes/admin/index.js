@@ -3,6 +3,7 @@ import { iniciarSesion, cerrarSesion, requireSesion, cookies } from '../../middl
 import { categoriasRouter } from './categorias.js';
 import { platosRouter } from './platos.js';
 import { mesasRouter as mesasAdminRouter } from './mesas.js';
+import { pedidosRouter } from './pedidos.js';
 
 export const adminRouter = Router();
 
@@ -33,3 +34,4 @@ adminRouter.get('/sesion', (req, res) => {
 adminRouter.use('/categorias', categoriasRouter);
 adminRouter.use('/platos', platosRouter);
 adminRouter.use('/mesas', mesasAdminRouter);
+adminRouter.use('/pedidos', pedidosRouter);

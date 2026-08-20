@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { db } from '../db/index.js';
+import { listarLineasDePedido, filaALinea } from '../lib/lineasPedido.js';
+import { emitirEvento } from '../lib/sse.js';
 
 export const mesasRouter = Router();
 
@@ -18,19 +20,6 @@ const insertarLinea = db.prepare(`
 const listarPedidosDeMesa = db.prepare(
   'SELECT id, estado, total_centimos, creado_en FROM pedidos WHERE mesa_id = ? ORDER BY id ASC'
 );
-const listarLineasDePedido = db.prepare(
-  'SELECT plato_id, nombre_plato, precio_centimos, cantidad, nota FROM lineas_pedido WHERE pedido_id = ? ORDER BY id ASC'
-);
-
-function filaALinea(fila) {
-  return {
-    platoId: fila.plato_id,
-    nombre: fila.nombre_plato,
-    precioCentimos: fila.precio_centimos,
-    cantidad: fila.cantidad,
-    nota: fila.nota,
-  };
-}
 
 function filaAPedido(fila) {
   return {
@@ -102,6 +91,7 @@ mesasRouter.post('/mesas/:token/pedidos', (req, res) => {
   // transacción, para que ambas usen el estado más reciente del catálogo y
   // no pueda quedar un pedido a medio escribir (design.md: Decisión de
   // revalidación transaccional).
+  const creadoEn = new Date().toISOString();
   const confirmar = db.transaction(() => {
     const lineasValidas = [];
     const descartados = [];
@@ -123,11 +113,7 @@ mesasRouter.post('/mesas/:token/pedidos', (req, res) => {
       (suma, l) => suma + l.plato.precio_centimos * l.cantidad,
       0
     );
-    const { lastInsertRowid: pedidoId } = insertarPedido.run(
-      mesa.id,
-      totalCentimos,
-      new Date().toISOString()
-    );
+    const { lastInsertRowid: pedidoId } = insertarPedido.run(mesa.id, totalCentimos, creadoEn);
     for (const l of lineasValidas) {
       insertarLinea.run(pedidoId, l.plato.id, l.plato.nombre, l.plato.precio_centimos, l.cantidad, l.nota);
     }
@@ -139,5 +125,19 @@ mesasRouter.post('/mesas/:token/pedidos', (req, res) => {
   });
 
   const resultado = confirmar();
+
+  // panel-cocina: aviso en tiempo real de pedido nuevo, emitido tras
+  // confirmar la transacción (design.md - Decisión SSE).
+  if (resultado.pedido) {
+    emitirEvento('pedido-nuevo', {
+      id: resultado.pedido.id,
+      mesa: mesa.nombre,
+      estado: resultado.pedido.estado,
+      creadoEn,
+      canceladoEn: null,
+      lineas: resultado.pedido.lineas,
+    });
+  }
+
   res.status(resultado.pedido ? 201 : 200).json(resultado);
 });

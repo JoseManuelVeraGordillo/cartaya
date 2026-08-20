@@ -11,7 +11,21 @@ export function crearApp() {
 
   // Comprime HTML/CSS/JS/JSON de todas las respuestas (carta-publica:
   // Rendimiento de carga en móvil); las fotos ya van comprimidas por sharp.
-  app.use(compression());
+  // El canal SSE del panel de cocina queda fuera: comprimir bufferiza la
+  // respuesta y rompe la entrega en tiempo real de una conexión que se
+  // mantiene abierta.
+  app.use(
+    compression({
+      filter: (req, res) => {
+        // req.path ya no sirve aquí: para cuando compression evalúa el
+        // filtro (en el primer res.write, con la conexión SSE ya abierta),
+        // Express ha recortado req.path al descender por los routers
+        // anidados de /api/admin/pedidos y todavía no lo ha restaurado.
+        if (req.originalUrl === '/api/admin/pedidos/eventos') return false;
+        return compression.filter(req, res);
+      },
+    })
+  );
   app.use(express.json());
 
   app.use('/api', cartaRouter);

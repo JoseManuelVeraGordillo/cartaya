@@ -391,3 +391,115 @@
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+/* Panel de cocina */
+
+.contenedor.cocina {
+  max-width: 1080px;
+}
+
+.cocina__aviso {
+  background: var(--color-exito-fondo);
+  border: 2px solid var(--color-exito-borde);
+  color: #1b4d1e;
+  padding: 0.8em 1em;
+  border-radius: 8px;
+  margin-bottom: 1em;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.cocina__lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.cocina__pedido {
+  border: 2px solid var(--color-borde);
+  border-radius: 10px;
+  padding: 1rem;
+  background: var(--color-superficie);
+}
+
+.cocina__pedido-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.cocina__pedido-cabecera strong {
+  font-size: 1.25rem;
+}
+
+.cocina__pedido-tiempo {
+  color: var(--color-texto-suave);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.cocina__pedido-lineas {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.cocina__pedido-lineas > li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.cocina__pedido-lineas > li:last-child {
+  border-bottom: none;
+}
+
+.cocina__pedido-cantidad {
+  font-weight: 700;
+}
+
+.cocina__pedido-nota {
+  margin: 0.2em 0 0;
+  color: var(--color-texto-suave);
+  font-style: italic;
+}
+
+.cocina__pedido-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cocina__pedido-acciones button {
+  flex: 1 1 auto;
+}
+
+.cocina__pedido-horas {
+  margin: 0;
+  color: var(--color-texto-suave);
+  font-size: 0.95rem;
+}
+
+.cocina__estado {
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.2em 0.6em;
+  border-radius: 999px;
+  border: 2px solid var(--color-borde);
+  white-space: nowrap;
+}
+
+.cocina__estado--servido {
+  border-color: var(--color-exito-borde);
+  color: #1b4d1e;
+}
+
+.cocina__estado--cancelado {
+  border-color: var(--color-alerta-borde);
+  color: #7a1414;
+}

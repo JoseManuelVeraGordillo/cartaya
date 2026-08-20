@@ -49,6 +49,11 @@ export const api = {
   crearMesa: (nombre) => peticion('/api/admin/mesas', { method: 'POST', body: JSON.stringify({ nombre }) }),
   regenerarTokenMesa: (id) => peticion(`/api/admin/mesas/${id}/regenerar-token`, { method: 'POST' }),
 
+  listarPedidosActivos: () => peticion('/api/admin/pedidos/activos'),
+  listarPedidosHistorico: () => peticion('/api/admin/pedidos/historico'),
+  avanzarPedido: (id) => peticion(`/api/admin/pedidos/${id}/avanzar`, { method: 'POST' }),
+  cancelarPedido: (id) => peticion(`/api/admin/pedidos/${id}/cancelar`, { method: 'POST' }),
+
   subirFotoPlato: async (id, archivo) => {
     const formData = new FormData();
     formData.append('foto', archivo);

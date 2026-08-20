@@ -1,7 +1,7 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import Database from 'better-sqlite3';
-import { crearEsquema } from './schema.js';
+import { crearEsquema, migrarEstadoPedidos } from './schema.js';
 import { sembrarDatosDesarrollo } from './seed.js';
 
 const DATA_DIR = process.env.CARTAYA_DATA_DIR
@@ -24,4 +24,5 @@ fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 export const db = abrirConexion();
 crearEsquema(db);
+migrarEstadoPedidos(db);
 sembrarDatosDesarrollo(db);

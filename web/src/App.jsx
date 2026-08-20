@@ -1,10 +1,12 @@
 import './App.css';
 import { CartaPublica } from './pages/CartaPublica.jsx';
 import { AdminApp } from './pages/Admin/AdminApp.jsx';
+import { CocinaApp } from './pages/Cocina/CocinaApp.jsx';
 
 function App() {
   const { pathname } = window.location;
   if (pathname.startsWith('/admin')) return <AdminApp />;
+  if (pathname.startsWith('/cocina')) return <CocinaApp />;
 
   // pedidos-mesa: Identificación de la mesa mediante QR — el QR de cada mesa
   // codifica /mesa/<token>, que abre la carta con esa mesa ya identificada.
