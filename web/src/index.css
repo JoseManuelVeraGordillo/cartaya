@@ -1,0 +1,137 @@
+:root {
+  --color-fondo: #ffffff;
+  --color-texto: #1a1a1a;
+  --color-texto-suave: #3f3f3f;
+  --color-borde: #cfcfcf;
+  --color-acento: #8a1c1c;
+  --color-acento-texto: #ffffff;
+  --color-superficie: #f7f5f2;
+  --color-alerta-fondo: #fdecec;
+  --color-alerta-borde: #c62828;
+  --color-exito-fondo: #eaf5ea;
+  --color-exito-borde: #2e7d32;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+#root {
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  border: 2px solid var(--color-acento);
+  background: var(--color-acento);
+  color: var(--color-acento-texto);
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+button.secundario {
+  background: var(--color-fondo);
+  color: var(--color-acento);
+}
+
+button.peligro {
+  background: var(--color-fondo);
+  color: var(--color-alerta-borde);
+  border-color: var(--color-alerta-borde);
+}
+
+input[type='text'],
+input[type='password'],
+input[type='number'],
+textarea,
+select {
+  width: 100%;
+  padding: 0.6em 0.8em;
+  border: 2px solid var(--color-borde);
+  border-radius: 8px;
+  background: var(--color-fondo);
+  min-height: 44px;
+}
+
+textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3em;
+}
+
+.campo {
+  margin-bottom: 1em;
+}
+
+a {
+  color: var(--color-acento);
+}
+
+.mensaje-error {
+  background: var(--color-alerta-fondo);
+  border: 2px solid var(--color-alerta-borde);
+  color: #7a1414;
+  padding: 0.8em 1em;
+  border-radius: 8px;
+  margin-bottom: 1em;
+  font-weight: 600;
+}
+
+.mensaje-exito {
+  background: var(--color-exito-fondo);
+  border: 2px solid var(--color-exito-borde);
+  color: #1b4d1e;
+  padding: 0.8em 1em;
+  border-radius: 8px;
+  margin-bottom: 1em;
+  font-weight: 600;
+}
+
+.contenedor {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem;
+}

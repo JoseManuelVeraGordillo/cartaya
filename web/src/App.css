@@ -1,0 +1,276 @@
+.carta-publica__cabecera {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.carta-publica__cabecera h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.carta-publica__cabecera p {
+  margin: 0.2em 0 0;
+  color: var(--color-texto-suave);
+}
+
+.carta-publica__categoria {
+  margin-bottom: 2rem;
+}
+
+.carta-publica__categoria h2 {
+  font-size: 1.4rem;
+  border-bottom: 3px solid var(--color-acento);
+  padding-bottom: 0.3em;
+}
+
+.carta-publica__lista-platos {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.carta-publica__plato {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.carta-publica__plato:last-child {
+  border-bottom: none;
+}
+
+.carta-publica__foto {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: var(--color-superficie);
+}
+
+.carta-publica__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.carta-publica__nombre-precio {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.carta-publica__nombre-precio h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.carta-publica__precio {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.carta-publica__descripcion {
+  margin: 0.3em 0;
+  color: var(--color-texto-suave);
+}
+
+.carta-publica__alergenos {
+  margin: 0.4em 0 0;
+  font-size: 0.95rem;
+}
+
+.carta-publica__alergenos-etiqueta {
+  font-weight: 700;
+}
+
+/* Administración */
+
+.admin__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.admin__cabecera h1 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.admin__pestanas {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.categoria-item {
+  border: 2px solid var(--color-borde);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: var(--color-superficie);
+}
+
+.categoria-item__cabecera h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.categoria-item__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.categoria-item__acciones button,
+.categoria-item__form-nombre button {
+  padding: 0.4em 0.7em;
+  min-height: 40px;
+}
+
+.categoria-item__form-nombre {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.categoria-item__form-nombre input {
+  flex: 1 1 200px;
+}
+
+.categoria-item__platos {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.plato-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-borde);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.plato-item:last-child {
+  border-bottom: none;
+}
+
+.plato-item__foto {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.plato-item__info {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.plato-item__cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.plato-item__alergenos {
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+}
+
+.plato-item__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.plato-item__acciones button,
+.boton-archivo {
+  padding: 0.4em 0.7em;
+  min-height: 40px;
+}
+
+.boton-archivo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 2px solid var(--color-acento);
+  color: var(--color-acento);
+  background: var(--color-fondo);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.plato-form {
+  border: 2px dashed var(--color-borde);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  background: var(--color-fondo);
+}
+
+.plato-form__alergenos {
+  border: 2px solid var(--color-borde);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.plato-form__alergeno {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 400;
+  margin-bottom: 0.4em;
+}
+
+.plato-form__alergeno input {
+  width: auto;
+  min-height: auto;
+}
+
+.plato-form__acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.nueva-categoria {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.nueva-categoria .campo {
+  flex: 1 1 200px;
+  margin-bottom: 0;
+}
+
+.archivados section {
+  margin-bottom: 2rem;
+}
+
+.archivados__lista {
+  list-style: none;
+  padding: 0;
+}
+
+.archivados__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-borde);
+}

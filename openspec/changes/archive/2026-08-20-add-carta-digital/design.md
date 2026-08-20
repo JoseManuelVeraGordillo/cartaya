@@ -38,6 +38,9 @@ Reordenar categorías o platos envía la lista completa de ids en el nuevo orden
 - Públicos (sin sesión): `GET /api/carta` - devuelve categorías activas con sus platos activos, ya ordenados, en un único payload (evita cascada de peticiones desde el móvil del cliente).
 - Administración (requieren sesión de establecimiento, vía el middleware de sesión ya existente en el proyecto): CRUD de categorías y platos, subida de foto, y reordenación, bajo un prefijo protegido (p. ej. `/api/admin/...`).
 
+### Compresión de respuesta: middleware `compression`
+Se añade **compression** (nueva dependencia) aplicada a toda la app, no solo a `GET /api/carta`. Justificación: una medición con Lighthouse en modo móvil (throttling por defecto, equivalente o más exigente que 4G en gama media) mostró que sin comprimir el bundle de React/Vite (~207 KB) el LCP superaba los 2 segundos del presupuesto (carta-publica: Rendimiento de carga en móvil); con compresión gzip de HTML/CSS/JS/JSON el bundle baja a ~64 KB y el LCP queda por debajo de 2 s. Es middleware estándar de Express, de un único propósito, sin infraestructura adicional.
+
 ### Tests trazables por escenario
 Se usa el test runner integrado `node:test` (Node 22, sin dependencia nueva) con un fichero de test por capability (`carta-publica`, `catalogo-admin`) y un test por escenario, nombrado igual que el escenario de la spec, para mantener la trazabilidad exigida por el proyecto.
 
