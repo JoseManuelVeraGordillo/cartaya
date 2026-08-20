@@ -13,6 +13,7 @@ export function sembrarDatosDesarrollo(db) {
     INSERT INTO platos (categoria_id, nombre, precio_centimos, descripcion, alergenos, orden)
     VALUES (?, ?, ?, ?, ?, ?)
   `);
+  const insertarMesa = db.prepare('INSERT INTO mesas (nombre, token) VALUES (?, ?)');
 
   const insertarTodo = db.transaction(() => {
     const { lastInsertRowid: categoriaId } = insertarCategoria.run('Bebidas', 1);
@@ -24,6 +25,9 @@ export function sembrarDatosDesarrollo(db) {
       JSON.stringify(['lacteos']),
       1
     );
+    // Token fijo para probar el flujo de pedido desde /mesa/<token> en local
+    // sin tener que generar un QR real cada vez.
+    insertarMesa.run('Mesa 1', 'mesa-desarrollo-token');
   });
 
   insertarTodo();

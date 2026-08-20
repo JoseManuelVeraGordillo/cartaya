@@ -3,17 +3,18 @@ import { api } from '../../lib/api.js';
 import { AdminLogin } from './AdminLogin.jsx';
 import { CatalogoPanel } from './CatalogoPanel.jsx';
 import { ArchivadosPanel } from './ArchivadosPanel.jsx';
+import { MesasPanel } from './MesasPanel.jsx';
 
 export function AdminApp() {
   const [sesion, setSesion] = useState('comprobando'); // comprobando | sin-sesion | activa
-  const [pestana, setPestana] = useState('catalogo'); // catalogo | archivados
-  const [datos, setDatos] = useState({ categorias: [], platos: [] });
+  const [pestana, setPestana] = useState('catalogo'); // catalogo | archivados | mesas
+  const [datos, setDatos] = useState({ categorias: [], platos: [], mesas: [] });
   const [error, setError] = useState(null);
 
   const cargarDatos = useCallback(() => {
-    Promise.all([api.listarCategorias(), api.listarPlatos()])
-      .then(([categorias, platos]) => {
-        setDatos({ categorias: categorias.categorias, platos: platos.platos });
+    Promise.all([api.listarCategorias(), api.listarPlatos(), api.listarMesas()])
+      .then(([categorias, platos, mesas]) => {
+        setDatos({ categorias: categorias.categorias, platos: platos.platos, mesas: mesas.mesas });
         setError(null);
       })
       .catch((err) => setError(err.message));
@@ -71,15 +72,24 @@ export function AdminApp() {
         >
           Archivados
         </button>
+        <button
+          type="button"
+          className={pestana === 'mesas' ? '' : 'secundario'}
+          onClick={() => setPestana('mesas')}
+        >
+          Mesas
+        </button>
       </nav>
 
       {error && <p className="mensaje-error">{error}</p>}
 
-      {pestana === 'catalogo' ? (
+      {pestana === 'catalogo' && (
         <CatalogoPanel categorias={datos.categorias} platos={datos.platos} onCambiado={cargarDatos} />
-      ) : (
+      )}
+      {pestana === 'archivados' && (
         <ArchivadosPanel categorias={datos.categorias} platos={datos.platos} onCambiado={cargarDatos} />
       )}
+      {pestana === 'mesas' && <MesasPanel mesas={datos.mesas} onCambiado={cargarDatos} />}
     </main>
   );
 }

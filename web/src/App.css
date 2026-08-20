@@ -85,6 +85,101 @@
   font-weight: 700;
 }
 
+/* Pedido desde la mesa */
+
+.carta-publica__ver-pedido {
+  position: sticky;
+  top: 0.5rem;
+  z-index: 1;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.anadir-al-pedido {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-borde);
+}
+
+.anadir-al-pedido__cantidad {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.anadir-al-pedido__cantidad button {
+  min-width: 44px;
+  padding: 0.4em;
+}
+
+.anadir-al-pedido__cantidad span {
+  font-weight: 700;
+  min-width: 1.5em;
+  text-align: center;
+}
+
+.anadir-al-pedido__nota {
+  margin-bottom: 0.75rem;
+}
+
+.resumen-pedido__lineas,
+.confirmacion-pedido__lineas {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.resumen-pedido__linea {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.resumen-pedido__nota {
+  margin: 0.2em 0 0;
+  color: var(--color-texto-suave);
+  font-style: italic;
+}
+
+.resumen-pedido__linea-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.resumen-pedido__linea-acciones label {
+  margin: 0;
+}
+
+.resumen-pedido__linea-acciones input[type='number'] {
+  width: 5rem;
+}
+
+.resumen-pedido__total,
+.confirmacion-pedido__total {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.resumen-pedido__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.confirmacion-pedido__numero {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.confirmacion-pedido__lineas li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--color-borde);
+}
+
 /* Administración */
 
 .admin__cabecera {
@@ -273,4 +368,26 @@
   gap: 0.75rem;
   padding: 0.75rem 0;
   border-bottom: 1px solid var(--color-borde);
+}
+
+.mesas-panel__item {
+  flex-wrap: wrap;
+}
+
+.mesas-panel__qr {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  background: var(--color-superficie);
+  border-radius: 6px;
+}
+
+.mesas-panel__info {
+  flex: 1 1 120px;
+}
+
+.mesas-panel__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }

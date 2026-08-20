@@ -3,6 +3,7 @@ import express from 'express';
 import compression from 'compression';
 import { UPLOADS_DIR } from './db/index.js';
 import { cartaRouter } from './routes/carta.js';
+import { mesasRouter } from './routes/mesas.js';
 import { adminRouter } from './routes/admin/index.js';
 
 export function crearApp() {
@@ -14,6 +15,7 @@ export function crearApp() {
   app.use(express.json());
 
   app.use('/api', cartaRouter);
+  app.use('/api', mesasRouter);
   app.use('/api/admin', adminRouter);
 
   // Fotos de plato, ya redimensionadas/recomprimidas al subirlas.

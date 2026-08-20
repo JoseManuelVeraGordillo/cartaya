@@ -22,5 +22,33 @@ export function crearEsquema(db) {
     );
 
     CREATE INDEX IF NOT EXISTS idx_platos_categoria ON platos(categoria_id);
+
+    CREATE TABLE IF NOT EXISTS mesas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL,
+      token TEXT NOT NULL UNIQUE
+    );
+
+    CREATE TABLE IF NOT EXISTS pedidos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      mesa_id INTEGER NOT NULL REFERENCES mesas(id),
+      estado TEXT NOT NULL,
+      total_centimos INTEGER NOT NULL,
+      creado_en TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_pedidos_mesa ON pedidos(mesa_id);
+
+    CREATE TABLE IF NOT EXISTS lineas_pedido (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      pedido_id INTEGER NOT NULL REFERENCES pedidos(id),
+      plato_id INTEGER NOT NULL REFERENCES platos(id),
+      nombre_plato TEXT NOT NULL,
+      precio_centimos INTEGER NOT NULL,
+      cantidad INTEGER NOT NULL,
+      nota TEXT NOT NULL DEFAULT ''
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_lineas_pedido_pedido ON lineas_pedido(pedido_id);
   `);
 }

@@ -40,6 +40,15 @@ export const api = {
   reactivarPlato: (id) => peticion(`/api/admin/platos/${id}/reactivar`, { method: 'POST' }),
   reordenarPlatos: (categoriaId, ids) =>
     peticion('/api/admin/platos/reordenar', { method: 'POST', body: JSON.stringify({ categoriaId, ids }) }),
+  obtenerMesa: (token) => peticion(`/api/mesas/${token}`),
+  confirmarPedido: (token, lineas) =>
+    peticion(`/api/mesas/${token}/pedidos`, { method: 'POST', body: JSON.stringify({ lineas }) }),
+  listarPedidosMesa: (token) => peticion(`/api/mesas/${token}/pedidos`),
+
+  listarMesas: () => peticion('/api/admin/mesas'),
+  crearMesa: (nombre) => peticion('/api/admin/mesas', { method: 'POST', body: JSON.stringify({ nombre }) }),
+  regenerarTokenMesa: (id) => peticion(`/api/admin/mesas/${id}/regenerar-token`, { method: 'POST' }),
+
   subirFotoPlato: async (id, archivo) => {
     const formData = new FormData();
     formData.append('foto', archivo);

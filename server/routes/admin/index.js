@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { iniciarSesion, cerrarSesion, requireSesion, cookies } from '../../middleware/session.js';
 import { categoriasRouter } from './categorias.js';
 import { platosRouter } from './platos.js';
+import { mesasRouter as mesasAdminRouter } from './mesas.js';
 
 export const adminRouter = Router();
 
@@ -31,3 +32,4 @@ adminRouter.get('/sesion', (req, res) => {
 
 adminRouter.use('/categorias', categoriasRouter);
 adminRouter.use('/platos', platosRouter);
+adminRouter.use('/mesas', mesasAdminRouter);
