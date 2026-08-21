@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 const LIMITE_NOTA = 140;
 
-export function AnadirAlPedido({ plato, onAnadir }) {
+export function AnadirAlPedido({ plato, onAnadir, agotado }) {
   const [cantidad, setCantidad] = useState(1);
   const [nota, setNota] = useState('');
   const [anadido, setAnadido] = useState(false);
@@ -27,6 +27,7 @@ export function AnadirAlPedido({ plato, onAnadir }) {
           className="secundario"
           onClick={() => setCantidad((c) => Math.max(1, c - 1))}
           aria-label={`Quitar unidad de ${plato.nombre}`}
+          disabled={agotado}
         >
           −
         </button>
@@ -36,6 +37,7 @@ export function AnadirAlPedido({ plato, onAnadir }) {
           className="secundario"
           onClick={() => setCantidad((c) => c + 1)}
           aria-label={`Añadir unidad de ${plato.nombre}`}
+          disabled={agotado}
         >
           +
         </button>
@@ -49,11 +51,12 @@ export function AnadirAlPedido({ plato, onAnadir }) {
           maxLength={LIMITE_NOTA}
           onChange={(e) => setNota(e.target.value)}
           placeholder="p. ej. sin cebolla"
+          disabled={agotado}
         />
         <small>{LIMITE_NOTA - nota.length} caracteres restantes</small>
       </div>
 
-      <button type="button" onClick={anadir}>
+      <button type="button" onClick={anadir} disabled={agotado}>
         {anadido ? 'Añadido ✓' : 'Añadir al pedido'}
       </button>
     </div>

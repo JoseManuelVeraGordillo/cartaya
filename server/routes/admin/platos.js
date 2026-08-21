@@ -16,6 +16,7 @@ function filaAPlato(fila) {
     alergenos: JSON.parse(fila.alergenos),
     orden: fila.orden,
     archivadoEn: fila.archivado_en,
+    agotado: Boolean(fila.agotado),
   };
 }
 
@@ -39,6 +40,8 @@ const actualizar = db.prepare(`
 const actualizarFoto = db.prepare('UPDATE platos SET foto_url = ? WHERE id = ?');
 const archivar = db.prepare('UPDATE platos SET archivado_en = ? WHERE id = ?');
 const reactivar = db.prepare('UPDATE platos SET archivado_en = NULL WHERE id = ?');
+const marcarAgotado = db.prepare('UPDATE platos SET agotado = 1 WHERE id = ?');
+const marcarDisponible = db.prepare('UPDATE platos SET agotado = 0 WHERE id = ?');
 const reordenarUno = db.prepare('UPDATE platos SET orden = ? WHERE id = ? AND categoria_id = ?');
 
 function validarDatosPlato(body) {
@@ -122,6 +125,24 @@ platosRouter.post('/:id/reactivar', (req, res) => {
     return res.status(404).json({ error: 'Plato no encontrado.' });
   }
   reactivar.run(id);
+  res.json({ ok: true });
+});
+
+platosRouter.post('/:id/agotar', (req, res) => {
+  const id = Number(req.params.id);
+  if (!obtenerPorId.get(id)) {
+    return res.status(404).json({ error: 'Plato no encontrado.' });
+  }
+  marcarAgotado.run(id);
+  res.json({ ok: true });
+});
+
+platosRouter.post('/:id/reponer', (req, res) => {
+  const id = Number(req.params.id);
+  if (!obtenerPorId.get(id)) {
+    return res.status(404).json({ error: 'Plato no encontrado.' });
+  }
+  marcarDisponible.run(id);
   res.json({ ok: true });
 });
 

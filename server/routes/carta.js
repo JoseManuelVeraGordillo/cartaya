@@ -12,7 +12,8 @@ const consultaCarta = db.prepare(`
     p.precio_centimos,
     p.descripcion,
     p.foto_url,
-    p.alergenos
+    p.alergenos,
+    p.agotado
   FROM categorias c
   JOIN platos p ON p.categoria_id = c.id AND p.archivado_en IS NULL
   WHERE c.archivada_en IS NULL
@@ -40,6 +41,7 @@ function obtenerCarta() {
       descripcion: fila.descripcion,
       fotoUrl: fila.foto_url,
       alergenos: JSON.parse(fila.alergenos),
+      agotado: Boolean(fila.agotado),
     });
   }
 

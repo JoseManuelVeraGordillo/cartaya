@@ -38,6 +38,8 @@ export const api = {
     peticion(`/api/admin/platos/${id}`, { method: 'PUT', body: JSON.stringify(datos) }),
   archivarPlato: (id) => peticion(`/api/admin/platos/${id}/archivar`, { method: 'POST' }),
   reactivarPlato: (id) => peticion(`/api/admin/platos/${id}/reactivar`, { method: 'POST' }),
+  agotarPlato: (id) => peticion(`/api/admin/platos/${id}/agotar`, { method: 'POST' }),
+  reponerPlato: (id) => peticion(`/api/admin/platos/${id}/reponer`, { method: 'POST' }),
   reordenarPlatos: (categoriaId, ids) =>
     peticion('/api/admin/platos/reordenar', { method: 'POST', body: JSON.stringify({ categoriaId, ids }) }),
   obtenerMesa: (token) => peticion(`/api/mesas/${token}`),

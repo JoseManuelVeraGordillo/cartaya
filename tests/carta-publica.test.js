@@ -159,6 +159,44 @@ test('Plato sin alérgenos declarados', async () => {
   assert.deepEqual(plato.alergenos, []);
 });
 
+async function agotarPlato(id) {
+  const r = await fetch(`${app.base}/api/admin/platos/${id}/agotar`, { method: 'POST', headers: { cookie } });
+  assert.equal(r.status, 200, 'el agotado de plato de apoyo para el test debe funcionar');
+}
+
+test('Plato agotado visible con aviso', async () => {
+  const categoria = await crearCategoria('Con agotado');
+  const plato = await crearPlato(categoria.id, {
+    nombre: 'Se agota hoy',
+    precioCentimos: 400,
+    descripcion: 'Descripción del plato agotado',
+    alergenos: ['gluten'],
+  });
+  await agotarPlato(plato.id);
+
+  const carta = await obtenerCarta();
+  const cat = carta.categorias.find((c) => c.id === categoria.id);
+  const enCarta = cat.platos.find((p) => p.id === plato.id);
+  assert.ok(enCarta, 'un plato agotado sigue apareciendo en la carta, a diferencia de uno archivado');
+  assert.equal(enCarta.nombre, 'Se agota hoy');
+  assert.equal(enCarta.precioCentimos, 400);
+  assert.equal(enCarta.descripcion, 'Descripción del plato agotado');
+  assert.deepEqual(enCarta.alergenos, ['gluten']);
+  assert.equal(enCarta.agotado, true, 'la carta expone el aviso de agotado');
+});
+
+test('Plato repuesto deja de mostrar el aviso de agotado', async () => {
+  const categoria = await crearCategoria('Repuesto');
+  const plato = await crearPlato(categoria.id, { nombre: 'Repuesto en carta', precioCentimos: 250, alergenos: [] });
+  await agotarPlato(plato.id);
+  await fetch(`${app.base}/api/admin/platos/${plato.id}/reponer`, { method: 'POST', headers: { cookie } });
+
+  const carta = await obtenerCarta();
+  const cat = carta.categorias.find((c) => c.id === categoria.id);
+  const enCarta = cat.platos.find((p) => p.id === plato.id);
+  assert.equal(enCarta.agotado, false);
+});
+
 test('Carga rápida en móvil con 4G', async () => {
   // La medición real en condiciones de móvil de gama media / 4G se hizo con
   // Lighthouse (LCP ≈ 1.5 s bajo el throttling móvil por defecto, más

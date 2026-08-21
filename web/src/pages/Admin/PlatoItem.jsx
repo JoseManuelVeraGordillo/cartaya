@@ -45,6 +45,22 @@ export function PlatoItem({ plato, esPrimero, esUltimo, onCambiado, onMover, arc
     }
   }
 
+  async function agotarOReponer() {
+    setEnBusy(true);
+    try {
+      if (plato.agotado) {
+        await api.reponerPlato(plato.id);
+      } else {
+        await api.agotarPlato(plato.id);
+      }
+      onCambiado();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setEnBusy(false);
+    }
+  }
+
   async function subirFoto(evento) {
     const archivo = evento.target.files?.[0];
     if (!archivo) return;
@@ -85,6 +101,7 @@ export function PlatoItem({ plato, esPrimero, esUltimo, onCambiado, onMover, arc
         <div className="plato-item__cabecera">
           <strong>{plato.nombre}</strong>
           <span>{formatearPrecio(plato.precioCentimos)}</span>
+          {plato.agotado && <span className="etiqueta-agotado">Agotado</span>}
         </div>
         {plato.descripcion && <p>{plato.descripcion}</p>}
         <p className="plato-item__alergenos">{textoAlergenos(plato.alergenos)}</p>
@@ -106,6 +123,9 @@ export function PlatoItem({ plato, esPrimero, esUltimo, onCambiado, onMover, arc
               Foto
               <input ref={inputFotoRef} type="file" accept="image/*" onChange={subirFoto} disabled={enBusy} hidden />
             </label>
+            <button type="button" className={plato.agotado ? '' : 'secundario'} onClick={agotarOReponer} disabled={enBusy}>
+              {plato.agotado ? 'Marcar disponible' : 'Marcar agotado'}
+            </button>
           </>
         )}
         <button type="button" className={archivado ? '' : 'peligro'} onClick={archivarOReactivar} disabled={enBusy}>

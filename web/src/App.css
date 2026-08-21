@@ -282,6 +282,18 @@
   color: var(--color-texto-suave);
 }
 
+.etiqueta-agotado {
+  align-self: center;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--color-alerta-borde);
+  background: var(--color-alerta-fondo);
+  border: 1px solid var(--color-alerta-borde);
+  white-space: nowrap;
+}
+
 .plato-item__acciones {
   display: flex;
   flex-wrap: wrap;

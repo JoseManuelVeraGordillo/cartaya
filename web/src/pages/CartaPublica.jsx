@@ -206,13 +206,16 @@ export function CartaPublica({ tokenMesa = null }) {
                   <div className="carta-publica__nombre-precio">
                     <h3>{plato.nombre}</h3>
                     <span className="carta-publica__precio">{formatearPrecio(plato.precioCentimos)}</span>
+                    {plato.agotado && <span className="etiqueta-agotado">Agotado hoy</span>}
                   </div>
                   {plato.descripcion && <p className="carta-publica__descripcion">{plato.descripcion}</p>}
                   <p className="carta-publica__alergenos">
                     <span className="carta-publica__alergenos-etiqueta">Alérgenos: </span>
                     {textoAlergenos(plato.alergenos)}
                   </p>
-                  {mesa && <AnadirAlPedido plato={plato} onAnadir={anadirAlCarrito} />}
+                  {mesa && (
+                    <AnadirAlPedido plato={plato} onAnadir={anadirAlCarrito} agotado={plato.agotado} />
+                  )}
                 </div>
               </li>
             ))}

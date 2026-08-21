@@ -98,7 +98,7 @@ mesasRouter.post('/mesas/:token/pedidos', (req, res) => {
 
     for (const linea of lineas) {
       const plato = obtenerPlatoPorId.get(linea.platoId);
-      if (!plato || plato.archivado_en) {
+      if (!plato || plato.archivado_en || plato.agotado) {
         descartados.push({ platoId: linea.platoId, nombre: plato?.nombre ?? null });
         continue;
       }

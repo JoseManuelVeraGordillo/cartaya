@@ -17,7 +17,8 @@ export function crearEsquema(db) {
       foto_url TEXT,
       alergenos TEXT NOT NULL,
       orden INTEGER NOT NULL,
-      archivado_en TEXT
+      archivado_en TEXT,
+      agotado INTEGER NOT NULL DEFAULT 0
     );
 
     CREATE INDEX IF NOT EXISTS idx_platos_categoria ON platos(categoria_id);
@@ -106,4 +107,13 @@ export function migrarEstadoPedidos(db) {
   } finally {
     db.pragma('foreign_keys = ON');
   }
+}
+
+// Añade la columna `agotado` a bases de datos creadas antes de este cambio.
+export function migrarAgotadoPlatos(db) {
+  const columnas = db.prepare('PRAGMA table_info(platos)').all();
+  const yaMigrada = columnas.some((columna) => columna.name === 'agotado');
+  if (yaMigrada) return;
+
+  db.exec('ALTER TABLE platos ADD COLUMN agotado INTEGER NOT NULL DEFAULT 0');
 }

@@ -184,6 +184,57 @@ test('Reactivar un plato archivado', async () => {
   assert.ok(cat.platos.some((p) => p.id === plato.id));
 });
 
+test('Marcar un plato como agotado', async () => {
+  const categoria = await crearCategoria('Marcar agotado');
+  const plato = await crearPlato(categoria.id, {
+    nombre: 'Se agota',
+    precioCentimos: 300,
+    descripcion: 'Descripción original',
+    alergenos: ['gluten'],
+  });
+
+  const r = await fetch(`${app.base}/api/admin/platos/${plato.id}/agotar`, { method: 'POST', headers: { cookie } });
+  assert.equal(r.status, 200);
+
+  const lista = await (await fetch(`${app.base}/api/admin/platos?categoriaId=${categoria.id}`, { headers: { cookie } })).json();
+  const actualizado = lista.platos.find((p) => p.id === plato.id);
+  assert.equal(actualizado.agotado, true);
+  assert.equal(actualizado.archivadoEn, null, 'marcar agotado no archiva el plato');
+  assert.equal(actualizado.nombre, 'Se agota');
+  assert.equal(actualizado.precioCentimos, 300);
+  assert.equal(actualizado.descripcion, 'Descripción original');
+  assert.deepEqual(actualizado.alergenos, ['gluten']);
+});
+
+test('Reponer un plato marcado como agotado', async () => {
+  const categoria = await crearCategoria('Reponer agotado');
+  const plato = await crearPlato(categoria.id, { nombre: 'Va y vuelve agotado', precioCentimos: 200, alergenos: [] });
+  await fetch(`${app.base}/api/admin/platos/${plato.id}/agotar`, { method: 'POST', headers: { cookie } });
+
+  const r = await fetch(`${app.base}/api/admin/platos/${plato.id}/reponer`, { method: 'POST', headers: { cookie } });
+  assert.equal(r.status, 200);
+
+  const lista = await (await fetch(`${app.base}/api/admin/platos?categoriaId=${categoria.id}`, { headers: { cookie } })).json();
+  const actualizado = lista.platos.find((p) => p.id === plato.id);
+  assert.equal(actualizado.agotado, false);
+});
+
+test('Intento de marcar o reponer un plato agotado sin sesión válida', async () => {
+  const categoria = await crearCategoria('Agotado sin sesión');
+  const plato = await crearPlato(categoria.id, { nombre: 'Protegido de agotar', precioCentimos: 100, alergenos: [] });
+
+  const rAgotar = await fetch(`${app.base}/api/admin/platos/${plato.id}/agotar`, { method: 'POST' });
+  assert.equal(rAgotar.status, 401);
+
+  await fetch(`${app.base}/api/admin/platos/${plato.id}/agotar`, { method: 'POST', headers: { cookie } });
+  const rReponer = await fetch(`${app.base}/api/admin/platos/${plato.id}/reponer`, { method: 'POST' });
+  assert.equal(rReponer.status, 401);
+
+  const lista = await (await fetch(`${app.base}/api/admin/platos?categoriaId=${categoria.id}`, { headers: { cookie } })).json();
+  const actualizado = lista.platos.find((p) => p.id === plato.id);
+  assert.equal(actualizado.agotado, true, 'el intento sin sesión no repone el plato que sí se agotó con sesión válida');
+});
+
 test('Intento de guardar un plato sin declarar alérgenos', async () => {
   const categoria = await crearCategoria('Sin declarar');
   const r = await fetch(`${app.base}/api/admin/platos`, {

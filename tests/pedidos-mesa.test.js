@@ -41,6 +41,11 @@ async function archivarPlato(id) {
   assert.equal(r.status, 200, 'el archivado de plato de apoyo para el test debe funcionar');
 }
 
+async function agotarPlato(id) {
+  const r = await fetch(`${app.base}/api/admin/platos/${id}/agotar`, { method: 'POST', headers: { cookie } });
+  assert.equal(r.status, 200, 'el agotado de plato de apoyo para el test debe funcionar');
+}
+
 async function crearMesa(nombre) {
   const r = await fetch(`${app.base}/api/admin/mesas`, {
     method: 'POST',
@@ -187,6 +192,86 @@ test('Un plato del pedido deja de estar activo antes de confirmar', async () => 
     cuerpo.descartados.some((d) => d.platoId === archivado.id),
     'el sistema avisa de qué plato se ha retirado del pedido'
   );
+});
+
+test('Intento de añadir un plato agotado', () => {
+  // Igual que "Cliente revisa el resumen antes de confirmar", no hay endpoint
+  // de "añadir al carrito" (el carrito vive solo en el cliente hasta
+  // confirmar), así que se comprueba en el código fuente que los controles
+  // para añadir quedan deshabilitados cuando el plato está agotado.
+  const anadirAlPedido = readFileSync(
+    path.resolve(import.meta.dirname, '..', 'web', 'src', 'pages', 'Pedido', 'AnadirAlPedido.jsx'),
+    'utf8'
+  );
+  const coincidencias = anadirAlPedido.match(/disabled=\{agotado\}/g) ?? [];
+  assert.ok(
+    coincidencias.length >= 3,
+    'los controles de cantidad, nota y el botón de añadir deben deshabilitarse cuando el plato está agotado'
+  );
+});
+
+test('Un plato del pedido pasa a agotado antes de confirmar', async () => {
+  const categoria = await crearCategoria('Un plato pasa a agotado');
+  const disponible = await crearPlato(categoria.id, { nombre: 'Sigue disponible', precioCentimos: 200 });
+  const agotado = await crearPlato(categoria.id, { nombre: 'Se agota antes de confirmar', precioCentimos: 300 });
+  await agotarPlato(agotado.id);
+  const mesa = await crearMesa('Mesa un plato agotado');
+
+  const r = await confirmarPedido(mesa.token, [
+    { platoId: disponible.id, cantidad: 1 },
+    { platoId: agotado.id, cantidad: 1 },
+  ]);
+  assert.equal(r.status, 201, 'el resto del pedido se envía aunque un plato esté agotado');
+  const cuerpo = await r.json();
+
+  assert.equal(cuerpo.pedido.lineas.length, 1);
+  assert.equal(cuerpo.pedido.lineas[0].platoId, disponible.id);
+  assert.ok(
+    cuerpo.descartados.some((d) => d.platoId === agotado.id),
+    'el sistema avisa de qué plato agotado se ha retirado del pedido'
+  );
+});
+
+test('Un plato activo y no agotado se añade con normalidad aunque otro plato de la carta esté agotado', async () => {
+  const categoria = await crearCategoria('Convive con agotado');
+  const disponible = await crearPlato(categoria.id, { nombre: 'No afectado', precioCentimos: 150 });
+  const agotado = await crearPlato(categoria.id, { nombre: 'Agotado en la misma carta', precioCentimos: 500 });
+  await agotarPlato(agotado.id);
+  const mesa = await crearMesa('Mesa convive con agotado');
+
+  const r = await confirmarPedido(mesa.token, [{ platoId: disponible.id, cantidad: 2 }]);
+  assert.equal(r.status, 201);
+  const { pedido, descartados } = await r.json();
+
+  assert.equal(pedido.lineas.length, 1);
+  assert.equal(pedido.lineas[0].cantidad, 2);
+  assert.equal(pedido.totalCentimos, 300);
+  assert.equal(descartados.length, 0, 'el plato agotado de otro pedido no afecta a uno que no lo incluye');
+});
+
+test('Ningún plato disponible por estar archivado o agotado', async () => {
+  const categoria = await crearCategoria('Archivado y agotado');
+  const archivado = await crearPlato(categoria.id, { nombre: 'Se archiva', precioCentimos: 200 });
+  const agotado = await crearPlato(categoria.id, { nombre: 'Se agota', precioCentimos: 300 });
+  await archivarPlato(archivado.id);
+  await agotarPlato(agotado.id);
+  const mesa = await crearMesa('Mesa archivado y agotado');
+
+  const r = await confirmarPedido(mesa.token, [
+    { platoId: archivado.id, cantidad: 1 },
+    { platoId: agotado.id, cantidad: 1 },
+  ]);
+  assert.equal(r.status, 200, 'no se crea ningún pedido cuando no queda ningún plato disponible');
+  const cuerpo = await r.json();
+
+  assert.equal(cuerpo.pedido, null);
+  assert.deepEqual(
+    cuerpo.descartados.map((d) => d.platoId).sort(),
+    [archivado.id, agotado.id].sort()
+  );
+
+  const pedidos = await (await fetch(`${app.base}/api/mesas/${mesa.token}/pedidos`)).json();
+  assert.equal(pedidos.pedidos.length, 0, 'no se envía ningún pedido');
 });
 
 test('Todos los platos del pedido dejan de estar activos antes de confirmar', async () => {
