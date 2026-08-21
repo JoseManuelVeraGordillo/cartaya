@@ -37,6 +37,17 @@ La carta MUST mostrar únicamente los platos activos (no eliminados) de cada cat
 - **WHEN** una categoría no tiene ningún plato activo
 - **THEN** esa categoría no se muestra en la carta pública
 
+### Requirement: Aviso visible de plato agotado
+Un plato activo marcado como agotado MUST seguir apareciendo en la carta pública (a diferencia de un plato archivado), pero MUST mostrarse con un aviso visible de que no está disponible hoy.
+
+#### Scenario: Plato agotado visible con aviso
+- **WHEN** un cliente ve en la carta un plato que el dueño ha marcado como agotado
+- **THEN** el plato se muestra con su nombre, precio, descripción y alérgenos, junto con un aviso visible de que está agotado
+
+#### Scenario: Plato repuesto deja de mostrar el aviso
+- **WHEN** el dueño repone un plato que estaba marcado como agotado
+- **THEN** la carta pública deja de mostrar el aviso de agotado para ese plato
+
 ### Requirement: Información obligatoria por plato
 Cada plato mostrado en la carta MUST incluir nombre, precio en euros con IVA incluido, descripción corta y sus alérgenos; la foto es opcional.
 

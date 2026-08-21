@@ -27,4 +27,4 @@
 ## 5. Cierre
 
 - [x] 5.1 Ejecutar la suite completa de tests (`npm test` o equivalente) y confirmar que pasa.
-- [ ] 5.2 Hacer commit de los cambios de código de "agotado" ya presentes en el árbol de trabajo junto con los tests nuevos.
+- [x] 5.2 Hacer commit de los cambios de código de "agotado" ya presentes en el árbol de trabajo junto con los tests nuevos.
